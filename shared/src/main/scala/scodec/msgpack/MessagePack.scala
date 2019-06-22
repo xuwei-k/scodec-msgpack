@@ -46,4 +46,3 @@ case class MArray32(a: Vector[MessagePack]) extends MessagePack
 case class MMap16(m: Map[MessagePack, MessagePack]) extends MessagePack
 case class MMap32(m: Map[MessagePack, MessagePack]) extends MessagePack
 case class MNegativeFixInt(i: Int) extends MessagePack
-

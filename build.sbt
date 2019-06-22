@@ -1,19 +1,17 @@
-import sbtcrossproject.{CrossType, crossProject}
+import sbtcrossproject.{crossProject, CrossType}
 import sbtrelease.ReleaseStateTransformations._
 
 publish := {}
 publishLocal := {}
 publishArtifact := false
 
-def gitHash: String = scala.util.Try(
-  sys.process.Process("git rev-parse HEAD").lineStream.head
-).getOrElse("master")
+def gitHash: String = sys.process.Process("git rev-parse HEAD").lineStream.head
 
-val tagName = Def.setting{
+val tagName = Def.setting {
   s"v${if (releaseUseGlobalVersion.value) (version in ThisBuild).value else version.value}"
 }
-val tagOrHash = Def.setting{
-  if(isSnapshot.value) gitHash else tagName.value
+val tagOrHash = Def.setting {
+  if (isSnapshot.value) gitHash else tagName.value
 }
 
 val unusedWarnings = Def.setting(
@@ -33,17 +31,16 @@ lazy val buildSettings = Seq(
   crossScalaVersions := Seq(Scala211, "2.12.8", "2.13.0"),
   scalaJSStage in Global := FastOptStage,
   resolvers += Opts.resolver.sonatypeReleases,
-  scalacOptions ++= (
-    "-deprecation" ::
-    "-unchecked" ::
-    "-Xlint" ::
-    "-language:existentials" ::
-    "-language:higherKinds" ::
-    "-language:implicitConversions" ::
-    Nil
+  scalacOptions ++= Seq(
+    "-deprecation",
+    "-unchecked",
+    "-Xlint",
+    "-language:existentials",
+    "-language:higherKinds",
+    "-language:implicitConversions"
   ),
   scalacOptions ++= unusedWarnings.value,
-  fullResolvers ~= {_.filterNot(_.name == "jcenter")},
+  fullResolvers ~= { _.filterNot(_.name == "jcenter") },
   libraryDependencies ++= Seq(
     "org.scodec" %%% "scodec-core" % "1.11.4",
     "org.scalatest" %%% "scalatest" % "3.0.8" % "test",
@@ -99,8 +96,7 @@ lazy val buildSettings = Seq(
       <url>git@github.com:xuwei-k/scodec-msgpack.git</url>
       <connection>scm:git:git@github.com:xuwei-k/scodec-msgpack.git</connection>
       <tag>{tagOrHash.value}</tag>
-    </scm>
-  ,
+    </scm>,
   description := "yet another msgpack implementation",
   pomPostProcess := { node =>
     import scala.xml._
@@ -109,26 +105,32 @@ lazy val buildSettings = Seq(
       override def transform(n: Node) =
         if (f(n)) NodeSeq.Empty else n
     }
-    val stripTestScope = stripIf { n => n.label == "dependency" && (n \ "scope").text == "test" }
+    val stripTestScope = stripIf { n =>
+      n.label == "dependency" && (n \ "scope").text == "test"
+    }
     new RuleTransformer(stripTestScope).transform(node)(0)
   }
-) ++ Seq(Compile, Test).flatMap(c =>
-  scalacOptions in (c, console) --= unusedWarnings.value
-)
+) ++ Seq(Compile, Test).flatMap(c => scalacOptions in (c, console) --= unusedWarnings.value)
 
-lazy val msgpack = crossProject(JSPlatform, JVMPlatform).crossType(CrossType.Full).in(file(".")).settings(
-  buildSettings: _*
-).enablePlugins(
-  BuildInfoPlugin
-).jsSettings(
-  scalacOptions += {
-    val a = (baseDirectory in LocalRootProject).value.toURI.toString
-    val g = "https://raw.githubusercontent.com/xuwei-k/scodec-msgpack/" + tagOrHash.value
-    s"-P:scalajs:mapSourceURI:$a->$g/"
-  }
-).jvmSettings(
-  libraryDependencies += "org.msgpack" % "msgpack-core" % "0.8.17" % "test"
-)
+lazy val msgpack = crossProject(JSPlatform, JVMPlatform)
+  .crossType(CrossType.Full)
+  .in(file("."))
+  .settings(
+    buildSettings: _*
+  )
+  .enablePlugins(
+    BuildInfoPlugin
+  )
+  .jsSettings(
+    scalacOptions += {
+      val a = (baseDirectory in LocalRootProject).value.toURI.toString
+      val g = "https://raw.githubusercontent.com/xuwei-k/scodec-msgpack/" + tagOrHash.value
+      s"-P:scalajs:mapSourceURI:$a->$g/"
+    }
+  )
+  .jvmSettings(
+    libraryDependencies += "org.msgpack" % "msgpack-core" % "0.8.17" % "test"
+  )
 
 lazy val msgpackJVM = msgpack.jvm
 lazy val msgpackJS = msgpack.js

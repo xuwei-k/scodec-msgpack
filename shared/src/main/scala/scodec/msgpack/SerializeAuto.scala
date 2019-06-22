@@ -39,15 +39,17 @@ private final class SerializeTypeClassImpl() extends TypeClass[Serialize] {
 
   override def product[H, T <: HList](H: Serialize[H], T: Serialize[T]) =
     new Serialize[H :: T] {
-      override def pack(v: H :: T) = for {
-        h <- H.pack(v.head)
-        t <- T.pack(v.tail)
-      } yield MFixArray(Vector(h, t))
+      override def pack(v: H :: T) =
+        for {
+          h <- H.pack(v.head)
+          t <- T.pack(v.tail)
+        } yield MFixArray(Vector(h, t))
       override def unpack(v: MessagePack) = v match {
-        case MFixArray(Vector(v1, v2)) => for {
-          h <- H.unpack(v1)
-          t <- T.unpack(v2)
-        } yield h :: t
+        case MFixArray(Vector(v1, v2)) =>
+          for {
+            h <- H.unpack(v1)
+            t <- T.unpack(v2)
+          } yield h :: t
         case other => Attempt.failure(Err(s"expected MfixArray(Vector(h, t)), but was $other."))
       }
     }

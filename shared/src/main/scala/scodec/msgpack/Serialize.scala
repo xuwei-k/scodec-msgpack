@@ -1,6 +1,6 @@
 package scodec.msgpack
 
-import scodec.{Err, Attempt, Codec}
+import scodec.{Attempt, Codec, Err}
 import scodec.bits.ByteVector
 
 abstract class Serialize[A] { self =>
@@ -25,7 +25,7 @@ object Serialize {
     def pack(v: Boolean): Attempt[MessagePack] = Attempt.successful(if (v) MTrue else MFalse)
 
     def unpack(v: MessagePack): Attempt[Boolean] = v match {
-      case m : MBool => Attempt.successful(m.value)
+      case m: MBool => Attempt.successful(m.value)
       case _ => fail("Boolean")
     }
   }
@@ -35,17 +35,15 @@ object Serialize {
     // This implementation refer to msgpack-java (Apache License version 2.0).
     // https://github.com/msgpack/msgpack-java/blob/bd9b4f20597111775120546de41dd3f9d01b9616/msgpack-core/src/main/java/org/msgpack/core/MessagePacker.java#L253
     // Change log: fix indent and return values.
-    def pack(v: Int): Attempt[MessagePack] = Attempt.successful(
-      if (v < -(1 << 5)) {
+    def pack(v: Int): Attempt[MessagePack] =
+      Attempt.successful(if (v < -(1 << 5)) {
         if (v < -(1 << 15)) MInt32(v)
         else if (v < -(1 << 7)) MInt16(v)
         else MInt8(v)
-      }
-      else if (v < (1 << 7)) {
+      } else if (v < (1 << 7)) {
         if (v >= 0) MPositiveFixInt(v)
         else MNegativeFixInt(v)
-      }
-      else {
+      } else {
         if (v < (1 << 8)) MUInt8(v)
         else if (v < (1 << 16)) MUInt16(v)
         else MUInt32(v)
@@ -71,27 +69,23 @@ object Serialize {
     // This implementation refer to msgpack-java (Apache License version 2.0).
     // https://github.com/msgpack/msgpack-java/blob/bd9b4f20597111775120546de41dd3f9d01b9616/msgpack-core/src/main/java/org/msgpack/core/MessagePacker.java#L277
     // Change log: fix indent and return values.
-    def pack(v: Long): Attempt[MessagePack] = Attempt.successful(
-      if (v < -(1L << 5)) {
+    def pack(v: Long): Attempt[MessagePack] =
+      Attempt.successful(if (v < -(1L << 5)) {
         if (v < -(1L << 15)) {
           if (v < -(1L << 31)) MInt64(v)
-          else  MInt32(v.toInt)
-        }
-        else {
+          else MInt32(v.toInt)
+        } else {
           if (v < -(1 << 7)) MInt16(v.toInt)
           else MInt8(v.toInt)
         }
-      }
-      else if (v < (1 << 7)) {
+      } else if (v < (1 << 7)) {
         if (v >= 0) MPositiveFixInt(v.toInt)
         else MNegativeFixInt(v.toInt)
-      }
-      else {
+      } else {
         if (v < (1L << 16)) {
           if (v < (1 << 8)) MUInt8(v.toInt)
           else MUInt16(v.toInt)
-        }
-        else {
+        } else {
           if (v < (1L << 32)) MUInt32(v)
           else MUInt64(v)
         }
@@ -134,11 +128,11 @@ object Serialize {
   }
 
   implicit val string: Serialize[String] = new Serialize[String] {
-    def pack(v: String): Attempt[MessagePack] = Attempt.successful{
+    def pack(v: String): Attempt[MessagePack] = Attempt.successful {
       val len = v.getBytes("UTF-8").length
-      if(len <= 31) MFixString(v)
-      else if(len <= 255) MString8(v)
-      else if(len <= 65535) MString16(v)
+      if (len <= 31) MFixString(v)
+      else if (len <= 255) MString8(v)
+      else if (len <= 65535) MString16(v)
       else MString32(v)
     }
 
@@ -152,10 +146,10 @@ object Serialize {
   }
 
   implicit val binary: Serialize[ByteVector] = new Serialize[ByteVector] {
-    def pack(v: ByteVector): Attempt[MessagePack] = Attempt.successful{
+    def pack(v: ByteVector): Attempt[MessagePack] = Attempt.successful {
       val len = v.size
-      if(len <= 255) MBinary8(v)
-      else if(len <= 65535) MBinary16(v)
+      if (len <= 255) MBinary8(v)
+      else if (len <= 65535) MBinary16(v)
       else MBinary32(v)
     }
 
@@ -170,17 +164,20 @@ object Serialize {
   implicit def array[A](implicit S: Serialize[A]): Serialize[Vector[A]] = new Serialize[Vector[A]] {
     def pack(vec: Vector[A]): Attempt[MessagePack] = {
       val len = vec.size
-      vec.foldLeft(Attempt.successful(Vector.empty[MessagePack])){
-        case (acc, v) => acc.flatMap(a => S.pack(v).map(a :+ _))
-      } .map(vm =>
-        if(len <= 15) MFixArray(vm)
-        else if(len <= 65535) MArray16(vm)
-        else MArray32(vm)
-      )
+      vec
+        .foldLeft(Attempt.successful(Vector.empty[MessagePack])) {
+          case (acc, v) => acc.flatMap(a => S.pack(v).map(a :+ _))
+        }
+        .map(
+          vm =>
+            if (len <= 15) MFixArray(vm)
+            else if (len <= 65535) MArray16(vm)
+            else MArray32(vm)
+        )
     }
 
     private def sequence(vec: Vector[MessagePack]): Attempt[Vector[A]] =
-      vec.foldLeft(Attempt.successful(Vector.empty[A])){ case (acc, v) => acc.flatMap(a => S.unpack(v).map(a :+ _))}
+      vec.foldLeft(Attempt.successful(Vector.empty[A])) { case (acc, v) => acc.flatMap(a => S.unpack(v).map(a :+ _)) }
 
     def unpack(v: MessagePack): Attempt[Vector[A]] = v match {
       case MFixArray(n) => sequence(n)
@@ -193,20 +190,22 @@ object Serialize {
   implicit def map[A, B](implicit S: Serialize[A], T: Serialize[B]): Serialize[Map[A, B]] = new Serialize[Map[A, B]] {
     def pack(m: Map[A, B]): Attempt[MessagePack] = {
       val len = m.size
-      m.toVector.foldLeft(Attempt.successful(Vector.empty[(MessagePack, MessagePack)])){
+      m.toVector.foldLeft(Attempt.successful(Vector.empty[(MessagePack, MessagePack)])) {
         case (acc, (k, v)) => acc.flatMap(a => S.pack(k).flatMap(kk => T.pack(v).map(vv => a :+ ((kk, vv)))))
-      } map{vm =>
+      } map { vm =>
         val mm = vm.toMap
-        if(len <= 15) MFixMap(mm)
-        else if(len <= 65535) MMap16(mm)
+        if (len <= 15) MFixMap(mm)
+        else if (len <= 65535) MMap16(mm)
         else MMap32(mm)
       }
     }
 
     private def sequence(m: Map[MessagePack, MessagePack]): Attempt[Map[A, B]] =
-      m.toVector.foldLeft(Attempt.successful(Vector.empty[(A, B)])){
-        case (acc, (k, v)) => acc.flatMap(a => S.unpack(k).flatMap(kk => T.unpack(v).map(vv => a :+ ((kk, vv)))))
-      }.map(_.toMap)
+      m.toVector
+        .foldLeft(Attempt.successful(Vector.empty[(A, B)])) {
+          case (acc, (k, v)) => acc.flatMap(a => S.unpack(k).flatMap(kk => T.unpack(v).map(vv => a :+ ((kk, vv)))))
+        }
+        .map(_.toMap)
 
     def unpack(v: MessagePack): Attempt[Map[A, B]] = v match {
       case MFixMap(n) => sequence(n)
@@ -218,15 +217,15 @@ object Serialize {
 
   def extension[A](code: ByteVector)(implicit S: Codec[A]): Serialize[A] = new Serialize[A] {
     def pack(v: A): Attempt[MessagePack] =
-      S.encode(v).map(_.bytes).map{encoded =>
+      S.encode(v).map(_.bytes).map { encoded =>
         val len = encoded.size
-        if(len <= 1) MFixExtension1(code, encoded)
-        if(len <= 2) MFixExtension2(code, encoded)
-        if(len <= 4) MFixExtension4(code, encoded)
-        if(len <= 8) MFixExtension8(code, encoded)
-        if(len <= 16) MFixExtension16(code, encoded)
-        if(len <= 256) MExtension8(len, code, encoded)
-        else if(len <= 65536) MExtension16(len, code, encoded)
+        if (len <= 1) MFixExtension1(code, encoded)
+        if (len <= 2) MFixExtension2(code, encoded)
+        if (len <= 4) MFixExtension4(code, encoded)
+        if (len <= 8) MFixExtension8(code, encoded)
+        if (len <= 16) MFixExtension16(code, encoded)
+        if (len <= 256) MExtension8(len, code, encoded)
+        else if (len <= 65536) MExtension16(len, code, encoded)
         else MExtension32(len, code, encoded)
       }
 

@@ -13,8 +13,7 @@ object MessagePackCodec extends Codec[MessagePack] {
 
   private def mmap(size: Codec[Int]): Codec[Map[MessagePack, MessagePack]] =
     lazily {
-      vectorOfN(size, MessagePackCodec ~ MessagePackCodec)
-        .xmap(vec => vec.toMap, m => m.toVector)
+      vectorOfN(size, MessagePackCodec ~ MessagePackCodec).xmap(vec => vec.toMap, m => m.toVector)
     }
 
   implicit val fixMap: Codec[MFixMap] =
@@ -41,7 +40,9 @@ object MessagePackCodec extends Codec[MessagePack] {
     (constant(hex"c6") :: variableSizeBytesLong(uint32, bytes)).dropUnits.as[MBinary32]
 
   // FIXME: type conversion
-  private def extension(size: Codec[Long]) = size.flatPrepend { n => bytes(1) :: bytes(n.toInt) }
+  private def extension(size: Codec[Long]) = size.flatPrepend { n =>
+    bytes(1) :: bytes(n.toInt)
+  }
 
   implicit val ext8: Codec[MExtension8] =
     (constant(hex"c7") :: extension(ulong(8))).dropUnits.as[MExtension8]
@@ -107,10 +108,7 @@ object MessagePackCodec extends Codec[MessagePack] {
 
   private def longMap(size: Codec[Long]): Codec[Map[MessagePack, MessagePack]] =
     lazily {
-      vectorOfN(
-        size.xmap(_.toInt, _.toLong),
-        MessagePackCodec ~ MessagePackCodec)
-        .xmap(_.toMap, _.toVector)
+      vectorOfN(size.xmap(_.toInt, _.toLong), MessagePackCodec ~ MessagePackCodec).xmap(_.toMap, _.toVector)
     }
 
   implicit val map32: Codec[MMap32] =

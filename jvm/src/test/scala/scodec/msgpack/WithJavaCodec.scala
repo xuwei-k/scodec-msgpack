@@ -3,7 +3,7 @@ package scodec.msgpack
 import scodec.Codec
 import Serialize._
 
-trait WithJavaCodec[A]{
+trait WithJavaCodec[A] {
   def javaCodec: Codec[A]
   def scalaCodec: Codec[A]
 

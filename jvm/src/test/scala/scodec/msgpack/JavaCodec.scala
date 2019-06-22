@@ -20,11 +20,12 @@ object JavaCodec {
     Attempt.successful(BitVector(out.toByteArray))
   }
 
-  def fromTryCatchNonFatal[A](a: => DecodeResult[A]): Attempt[DecodeResult[A]] = try {
-    Attempt.successful(a)
-  } catch {
-    case NonFatal(t) => Attempt.failure(Err.apply(t.toString))
-  }
+  def fromTryCatchNonFatal[A](a: => DecodeResult[A]): Attempt[DecodeResult[A]] =
+    try {
+      Attempt.successful(a)
+    } catch {
+      case NonFatal(t) => Attempt.failure(Err.apply(t.toString))
+    }
 
   def withUnpacker[A](f: MessageUnpacker => A): BitVector => Attempt[DecodeResult[A]] =
     bitVector2Unpacker.andThen { unpacker =>
@@ -62,7 +63,7 @@ object JavaCodec {
   )
 
   val float: Codec[Float] = javacodec(
-    _ packFloat  _,
+    _ packFloat _,
     _.unpackFloat
   )
 

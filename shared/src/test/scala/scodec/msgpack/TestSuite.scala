@@ -25,4 +25,3 @@ abstract class TestSuite extends FlatSpec with DiagrammedAssertions {
   }
 
 }
-
