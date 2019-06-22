@@ -28,7 +28,6 @@ lazy val buildSettings = Seq(
   scalaVersion := Scala211,
   crossScalaVersions := Seq(Scala211, "2.12.8", "2.13.0"),
   scalaJSStage in Global := FastOptStage,
-  resolvers += Opts.resolver.sonatypeReleases,
   scalacOptions ++= Seq(
     "-deprecation",
     "-unchecked",
