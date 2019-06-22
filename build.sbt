@@ -127,7 +127,7 @@ lazy val msgpack = crossProject(JSPlatform, JVMPlatform).crossType(CrossType.Ful
     s"-P:scalajs:mapSourceURI:$a->$g/"
   }
 ).jvmSettings(
-  libraryDependencies += "org.msgpack" % "msgpack-core" % "0.8.16" % "test"
+  libraryDependencies += "org.msgpack" % "msgpack-core" % "0.8.17" % "test"
 )
 
 lazy val msgpackJVM = msgpack.jvm
