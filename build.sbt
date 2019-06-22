@@ -78,24 +78,26 @@ lazy val buildSettings = Seq(
     commitNextVersion,
     pushChanges
   ),
-  credentials ++= PartialFunction.condOpt(sys.env.get("SONATYPE_USER") -> sys.env.get("SONATYPE_PASS")){
-    case (Some(user), Some(pass)) =>
-      Credentials("Sonatype Nexus Repository Manager", "oss.sonatype.org", user, pass)
-  }.toList,
-  organization := "com.github.pocketberserker",
-  homepage := Some(url("https://github.com/pocketberserker/scodec-msgpack")),
+  organization := "com.github.xuwei-k",
+  credentials ++= PartialFunction
+    .condOpt(sys.env.get("SONATYPE_USER") -> sys.env.get("SONATYPE_PASS")) {
+      case (Some(user), Some(pass)) =>
+        Credentials("Sonatype Nexus Repository Manager", "oss.sonatype.org", user, pass)
+    }
+    .toList,
+  homepage := Some(url("https://github.com/xuwei-k/scodec-msgpack")),
   licenses := Seq("MIT License" -> url("http://www.opensource.org/licenses/mit-license.php")),
   pomExtra :=
     <developers>
       <developer>
-        <id>pocketberserker</id>
-        <name>Yuki Nakayama</name>
-        <url>https://github.com/pocketberserker</url>
+        <id>xuwei-k</id>
+        <name>Kenji Yoshida</name>
+        <url>https://github.com/xuwei-k</url>
       </developer>
     </developers>
     <scm>
-      <url>git@github.com:pocketberserker/scodec-msgpack.git</url>
-      <connection>scm:git:git@github.com:pocketberserker/scodec-msgpack.git</connection>
+      <url>git@github.com:xuwei-k/scodec-msgpack.git</url>
+      <connection>scm:git:git@github.com:xuwei-k/scodec-msgpack.git</connection>
       <tag>{tagOrHash.value}</tag>
     </scm>
   ,
@@ -121,7 +123,7 @@ lazy val msgpack = crossProject(JSPlatform, JVMPlatform).crossType(CrossType.Ful
 ).jsSettings(
   scalacOptions += {
     val a = (baseDirectory in LocalRootProject).value.toURI.toString
-    val g = "https://raw.githubusercontent.com/pocketberserker/scodec-msgpack/" + tagOrHash.value
+    val g = "https://raw.githubusercontent.com/xuwei-k/scodec-msgpack/" + tagOrHash.value
     s"-P:scalajs:mapSourceURI:$a->$g/"
   }
 ).jvmSettings(
