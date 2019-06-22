@@ -1,9 +1,7 @@
 import sbtcrossproject.{crossProject, CrossType}
 import sbtrelease.ReleaseStateTransformations._
 
-publish := {}
-publishLocal := {}
-publishArtifact := false
+skip in publish := true
 
 def gitHash: String = sys.process.Process("git rev-parse HEAD").lineStream.head
 
@@ -58,7 +56,7 @@ lazy val buildSettings = Seq(
   buildInfoPackage := "scodec.msgpack",
   buildInfoObject := "BuildInfoScodecMsgpack",
   releaseCrossBuild := true,
-  publishTo := sonatypePublishTo.value,
+  publishTo in ThisBuild := sonatypePublishTo.value,
   releasePublishArtifactsAction := PgpKeys.publishSigned.value,
   publishArtifact in Test := false,
   releaseTagName := tagName.value,
