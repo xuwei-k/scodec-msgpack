@@ -23,11 +23,9 @@ val unusedWarnings = Def.setting(
 
 val Scala211 = "2.11.12"
 
-lazy val buildSettings = Seq(
-  name := "scodec-msgpack",
+lazy val commonSettings = Def.settings(
   scalaVersion := Scala211,
   crossScalaVersions := Seq(Scala211, "2.12.8", "2.13.0"),
-  scalaJSStage in Global := FastOptStage,
   scalacOptions ++= Seq(
     "-deprecation",
     "-unchecked",
@@ -37,23 +35,6 @@ lazy val buildSettings = Seq(
     "-language:implicitConversions"
   ),
   scalacOptions ++= unusedWarnings.value,
-  fullResolvers ~= { _.filterNot(_.name == "jcenter") },
-  libraryDependencies ++= Seq(
-    "org.scodec" %%% "scodec-core" % "1.11.4",
-    "org.scalatest" %%% "scalatest" % "3.0.8" % "test",
-    "org.scalacheck" %%% "scalacheck" % "1.14.0" % "test"
-  ),
-  buildInfoKeys := BuildInfoKey.ofN(
-    organization,
-    name,
-    version,
-    scalaVersion,
-    sbtVersion,
-    scalacOptions,
-    licenses
-  ),
-  buildInfoPackage := "scodec.msgpack",
-  buildInfoObject := "BuildInfoScodecMsgpack",
   releaseCrossBuild := true,
   publishTo in ThisBuild := sonatypePublishTo.value,
   releasePublishArtifactsAction := PgpKeys.publishSigned.value,
@@ -71,7 +52,30 @@ lazy val buildSettings = Seq(
     setNextVersion,
     commitNextVersion,
     pushChanges
+  )
+)
+
+commonSettings
+
+lazy val buildSettings = commonSettings ++ Seq(
+  name := "scodec-msgpack",
+  scalaJSStage in Global := FastOptStage,
+  libraryDependencies ++= Seq(
+    "org.scodec" %%% "scodec-core" % "1.11.4",
+    "org.scalatest" %%% "scalatest" % "3.0.8" % "test",
+    "org.scalacheck" %%% "scalacheck" % "1.14.0" % "test"
   ),
+  buildInfoKeys := BuildInfoKey.ofN(
+    organization,
+    name,
+    version,
+    scalaVersion,
+    sbtVersion,
+    scalacOptions,
+    licenses
+  ),
+  buildInfoPackage := "scodec.msgpack",
+  buildInfoObject := "BuildInfoScodecMsgpack",
   organization := "com.github.xuwei-k",
   credentials ++= PartialFunction
     .condOpt(sys.env.get("SONATYPE_USER") -> sys.env.get("SONATYPE_PASS")) {
