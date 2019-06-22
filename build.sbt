@@ -18,8 +18,6 @@ val tagOrHash = Def.setting{
 
 val unusedWarnings = Def.setting(
   CrossVersion.partialVersion(scalaVersion.value) match {
-    case Some((2, 10)) =>
-      Nil
     case Some((2, 11)) =>
       Seq("-Ywarn-unused-import")
     case _ =>
