@@ -3,10 +3,10 @@ Scodec MessagePack
 
 .. image:: https://travis-ci.org/xuwei-k/scodec-msgpack.svg?branch=master
     :target: https://travis-ci.org/xuwei-k/scodec-msgpack
-.. image:: https://maven-badges.herokuapp.com/maven-central/com.github.xuwei-k/scodec-msgpack_2.11/badge.svg
-    :target: https://maven-badges.herokuapp.com/maven-central/com.github.xuwei-k/scodec-msgpack_2.11
-.. image:: http://javadoc-badge.appspot.com/com.github.xuwei-k/scodec-msgpack_2.11.svg?label=scaladoc
-    :target: http://javadoc-badge.appspot.com/com.github.xuwei-k/scodec-msgpack_2.11
+.. image:: https://maven-badges.herokuapp.com/maven-central/com.github.xuwei-k/scodec-msgpack_2.13/badge.svg
+    :target: https://maven-badges.herokuapp.com/maven-central/com.github.xuwei-k/scodec-msgpack_2.13
+.. image:: http://javadoc-badge.appspot.com/com.github.xuwei-k/scodec-msgpack_2.13.svg?label=scaladoc
+    :target: http://javadoc-badge.appspot.com/com.github.xuwei-k/scodec-msgpack_2.13
 
 scodec-msgpack is a yet another `MessagePack <http://msgpack.org/>`_ Scala implementation.
 
