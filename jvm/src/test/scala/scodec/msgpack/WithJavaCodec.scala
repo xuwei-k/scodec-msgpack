@@ -15,7 +15,6 @@ trait WithJavaCodec[A] {
 }
 
 object WithJavaCodec {
-
   def apply[A](jcodec: Codec[A])(implicit scodec: Codec[A]): WithJavaCodec[A] =
     new WithJavaCodec[A] {
       override def scalaCodec = scodec

@@ -7,7 +7,6 @@ import scodec.bits._
 import scodec.codecs._
 
 object MessagePackCodec extends Codec[MessagePack] {
-
   implicit val positiveFixInt: Codec[MPositiveFixInt] =
     (constant(bin"0") :: uint(7)).dropUnits.as[MPositiveFixInt]
 

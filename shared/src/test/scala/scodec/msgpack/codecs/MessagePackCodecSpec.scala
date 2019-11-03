@@ -4,7 +4,6 @@ package codecs
 import scodec.bits.ByteVector
 
 class MessagePackCodecSpec extends TestSuite {
-
   implicit val codec: scodec.Codec[MessagePack] = MessagePackCodec
 
   "nil" should "be able to encode and decode" in {

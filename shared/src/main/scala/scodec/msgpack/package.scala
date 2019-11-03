@@ -3,7 +3,6 @@ package scodec
 import scodec.bits.BitVector
 
 package object msgpack {
-
   import codecs.MessagePackCodec
 
   implicit def serializeCodec[A](implicit S: Serialize[A]): Codec[A] = new Codec[A] {

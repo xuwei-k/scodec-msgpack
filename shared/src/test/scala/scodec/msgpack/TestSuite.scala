@@ -7,7 +7,6 @@ import org.scalatest.FlatSpec
 import org.scalatest.DiagrammedAssertions
 
 abstract class TestSuite extends FlatSpec with DiagrammedAssertions {
-
   def roundtrip[A](a: A)(implicit C: Codec[A]) = {
     C.encode(a) match {
       case Failure(error) =>
@@ -23,5 +22,4 @@ abstract class TestSuite extends FlatSpec with DiagrammedAssertions {
         }
     }
   }
-
 }
