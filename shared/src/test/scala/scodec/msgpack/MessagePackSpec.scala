@@ -7,7 +7,6 @@ import org.scalatestplus.scalacheck.Checkers
 import scala.util.Random
 
 class MessagePackSpec extends TestSuite with Checkers {
-
   import Serialize._
 
   "bool" should "be able to encode and decode" in {
@@ -54,5 +53,4 @@ class MessagePackSpec extends TestSuite with Checkers {
     val result = codecs.MessagePackCodec.decode(scodec.bits.BitVector(binary))
     assert(result.map(_.value) == Attempt.successful(MBinary16(scodec.bits.ByteVector(data))))
   }
-
 }

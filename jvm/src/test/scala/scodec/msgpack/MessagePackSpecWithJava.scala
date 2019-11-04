@@ -6,7 +6,6 @@ import org.scalacheck.Arbitrary._
 import org.scalatestplus.scalacheck.Checkers
 
 class MessagePackSpecWithJava extends TestSuite with Checkers {
-
   def roundtripWithJava[A](a: A)(implicit C: WithJavaCodec[A]) = {
     roundtrip(a)(C.javaEncoderScalaDecoder)
     roundtrip(a)(C.scalaEncoderJavaDecoder)
@@ -35,5 +34,4 @@ class MessagePackSpecWithJava extends TestSuite with Checkers {
   "string" should "be able to encode and decode" in {
     check(forAll((s: String) => roundtripWithJava(s)))
   }
-
 }

@@ -9,7 +9,6 @@ object SerializeAuto extends TypeClassCompanion[Serialize] {
 }
 
 private final class SerializeTypeClassImpl() extends TypeClass[Serialize] {
-
   override def coproduct[L, R <: Coproduct](CL: => Serialize[L], CR: => Serialize[R]) = {
     lazy val cl = CL
     lazy val cr = CR

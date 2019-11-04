@@ -15,13 +15,11 @@ abstract class Serialize[A] { self =>
 }
 
 object Serialize {
-
   def apply[A](implicit S: Serialize[A]) = S
 
   private def fail(v: String) = Attempt.failure(Err(s"fail to unpack: $v"))
 
   implicit val bool: Serialize[Boolean] = new Serialize[Boolean] {
-
     def pack(v: Boolean): Attempt[MessagePack] = Attempt.successful(if (v) MTrue else MFalse)
 
     def unpack(v: MessagePack): Attempt[Boolean] = v match {
@@ -31,7 +29,6 @@ object Serialize {
   }
 
   implicit val int: Serialize[Int] = new Serialize[Int] {
-
     // This implementation refer to msgpack-java (Apache License version 2.0).
     // https://github.com/msgpack/msgpack-java/blob/bd9b4f20597111775120546de41dd3f9d01b9616/msgpack-core/src/main/java/org/msgpack/core/MessagePacker.java#L253
     // Change log: fix indent and return values.
@@ -65,7 +62,6 @@ object Serialize {
   }
 
   implicit val long: Serialize[Long] = new Serialize[Long] {
-
     // This implementation refer to msgpack-java (Apache License version 2.0).
     // https://github.com/msgpack/msgpack-java/blob/bd9b4f20597111775120546de41dd3f9d01b9616/msgpack-core/src/main/java/org/msgpack/core/MessagePacker.java#L277
     // Change log: fix indent and return values.
@@ -107,7 +103,6 @@ object Serialize {
   }
 
   implicit val float: Serialize[Float] = new Serialize[Float] {
-
     def pack(v: Float): Attempt[MessagePack] = Attempt.successful(MFloat32(v))
 
     def unpack(v: MessagePack): Attempt[Float] = v match {
@@ -117,7 +112,6 @@ object Serialize {
   }
 
   implicit val double: Serialize[Double] = new Serialize[Double] {
-
     def pack(v: Double): Attempt[MessagePack] = Attempt.successful(MFloat64(v))
 
     def unpack(v: MessagePack): Attempt[Double] = v match {

@@ -12,7 +12,6 @@ import org.scalatestplus.scalacheck.Checkers
 import scodec.bits.BitVector
 
 class NumberSpec extends FlatSpec with Checkers {
-
   private[this] def withDataOutputStream(f: DataOutputStream => Unit): BitVector = {
     val out = new ByteArrayOutputStream()
     val data = new DataOutputStream(out)
@@ -141,5 +140,4 @@ class NumberSpec extends FlatSpec with Checkers {
       params: _*
     )
   }
-
 }
