@@ -162,11 +162,10 @@ object Serialize {
         .foldLeft(Attempt.successful(Vector.empty[MessagePack])) {
           case (acc, v) => acc.flatMap(a => S.pack(v).map(a :+ _))
         }
-        .map(
-          vm =>
-            if (len <= 15) MFixArray(vm)
-            else if (len <= 65535) MArray16(vm)
-            else MArray32(vm)
+        .map(vm =>
+          if (len <= 15) MFixArray(vm)
+          else if (len <= 65535) MArray16(vm)
+          else MArray32(vm)
         )
     }
 
