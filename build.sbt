@@ -63,7 +63,7 @@ lazy val buildSettings = commonSettings ++ Seq(
   libraryDependencies ++= Seq(
     "org.scodec" %%% "scodec-core" % "1.11.4",
     "org.scalatest" %%% "scalatest" % "3.0.8" % "test",
-    "org.scalacheck" %%% "scalacheck" % "1.14.2" % "test"
+    "org.scalacheck" %%% "scalacheck" % "1.14.3" % "test"
   ),
   buildInfoKeys := BuildInfoKey.ofN(
     organization,
