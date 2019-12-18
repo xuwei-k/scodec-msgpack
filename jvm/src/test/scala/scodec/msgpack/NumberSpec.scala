@@ -7,11 +7,11 @@ import java.math.BigInteger
 import org.msgpack.core.MessagePack.Code
 import org.scalacheck.Gen
 import org.scalacheck.Prop.forAll
-import org.scalatest.FlatSpec
 import org.scalatestplus.scalacheck.Checkers
 import scodec.bits.BitVector
+import org.scalatest.flatspec.AnyFlatSpec
 
-class NumberSpec extends FlatSpec with Checkers {
+class NumberSpec extends AnyFlatSpec with Checkers {
   private[this] def withDataOutputStream(f: DataOutputStream => Unit): BitVector = {
     val out = new ByteArrayOutputStream()
     val data = new DataOutputStream(out)

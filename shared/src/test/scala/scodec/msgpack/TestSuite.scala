@@ -3,10 +3,10 @@ package scodec.msgpack
 import scodec._
 import Attempt._
 import scodec.bits.BitVector
-import org.scalatest.FlatSpec
-import org.scalatest.DiagrammedAssertions
+import org.scalatest.diagrams.Diagrams
+import org.scalatest.flatspec.AnyFlatSpec
 
-abstract class TestSuite extends FlatSpec with DiagrammedAssertions {
+abstract class TestSuite extends AnyFlatSpec with Diagrams {
   def roundtrip[A](a: A)(implicit C: Codec[A]) = {
     C.encode(a) match {
       case Failure(error) =>
