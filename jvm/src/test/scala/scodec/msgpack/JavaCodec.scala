@@ -7,9 +7,7 @@ import scodec._
 import scodec.bits.BitVector
 
 object JavaCodec {
-  val bitVector2Unpacker: BitVector => MessageUnpacker = { bits =>
-    JMessagePack.newDefaultUnpacker(bits.toByteArray)
-  }
+  val bitVector2Unpacker: BitVector => MessageUnpacker = { bits => JMessagePack.newDefaultUnpacker(bits.toByteArray) }
 
   def withPacker(f: MessagePacker => Unit): Attempt[BitVector] = {
     val out = new ByteArrayOutputStream()

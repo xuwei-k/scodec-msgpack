@@ -39,9 +39,7 @@ object MessagePackCodec extends Codec[MessagePack] {
     (constant(hex"c6") :: variableSizeBytesLong(uint32, bytes)).dropUnits.as[MBinary32]
 
   // FIXME: type conversion
-  private def extension(size: Codec[Long]) = size.flatPrepend { n =>
-    bytes(1) :: bytes(n.toInt)
-  }
+  private def extension(size: Codec[Long]) = size.flatPrepend { n => bytes(1) :: bytes(n.toInt) }
 
   implicit val ext8: Codec[MExtension8] =
     (constant(hex"c7") :: extension(ulong(8))).dropUnits.as[MExtension8]
