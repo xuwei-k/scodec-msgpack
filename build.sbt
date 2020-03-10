@@ -12,20 +12,13 @@ val tagOrHash = Def.setting {
   if (isSnapshot.value) gitHash else tagName.value
 }
 
-val unusedWarnings = Def.setting(
-  CrossVersion.partialVersion(scalaVersion.value) match {
-    case Some((2, 11)) =>
-      Seq("-Ywarn-unused-import")
-    case _ =>
-      Seq("-Ywarn-unused:imports")
-  }
-)
+val unusedWarnings = Seq("-Ywarn-unused:imports")
 
-val Scala211 = "2.11.12"
+val Scala212 = "2.12.10"
 
 lazy val commonSettings = Def.settings(
-  scalaVersion := Scala211,
-  crossScalaVersions := Seq(Scala211, "2.12.10", "2.13.1"),
+  scalaVersion := Scala212,
+  crossScalaVersions := Seq(Scala212, "2.13.1"),
   scalacOptions ++= Seq(
     "-deprecation",
     "-unchecked",
@@ -34,7 +27,7 @@ lazy val commonSettings = Def.settings(
     "-language:higherKinds",
     "-language:implicitConversions"
   ),
-  scalacOptions ++= unusedWarnings.value,
+  scalacOptions ++= unusedWarnings,
   releaseCrossBuild := true,
   publishTo in ThisBuild := sonatypePublishTo.value,
   releasePublishArtifactsAction := PgpKeys.publishSigned.value,
@@ -110,7 +103,7 @@ lazy val buildSettings = commonSettings ++ Seq(
     val stripTestScope = stripIf { n => n.label == "dependency" && (n \ "scope").text == "test" }
     new RuleTransformer(stripTestScope).transform(node)(0)
   }
-) ++ Seq(Compile, Test).flatMap(c => scalacOptions in (c, console) --= unusedWarnings.value)
+) ++ Seq(Compile, Test).flatMap(c => scalacOptions in (c, console) --= unusedWarnings)
 
 lazy val msgpack = crossProject(JSPlatform, JVMPlatform)
   .crossType(CrossType.Full)
