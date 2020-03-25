@@ -29,7 +29,7 @@ lazy val commonSettings = Def.settings(
   ),
   scalacOptions ++= unusedWarnings,
   releaseCrossBuild := true,
-  publishTo in ThisBuild := sonatypePublishTo.value,
+  publishTo in ThisBuild := sonatypePublishToBundle.value,
   publishArtifact in Test := false,
   releaseTagName := tagName.value,
   releaseProcess := Seq[ReleaseStep](
@@ -47,6 +47,7 @@ lazy val commonSettings = Def.settings(
       },
       enableCrossBuild = true
     ),
+    releaseStepCommandAndRemaining("sonatypeBundleRelease"),
     setNextVersion,
     commitNextVersion,
     pushChanges
