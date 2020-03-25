@@ -30,7 +30,6 @@ lazy val commonSettings = Def.settings(
   scalacOptions ++= unusedWarnings,
   releaseCrossBuild := true,
   publishTo in ThisBuild := sonatypePublishTo.value,
-  releasePublishArtifactsAction := PgpKeys.publishSigned.value,
   publishArtifact in Test := false,
   releaseTagName := tagName.value,
   releaseProcess := Seq[ReleaseStep](
@@ -41,7 +40,13 @@ lazy val commonSettings = Def.settings(
     setReleaseVersion,
     commitReleaseVersion,
     tagRelease,
-    publishArtifacts,
+    ReleaseStep(
+      action = { state =>
+        val extracted = Project extract state
+        extracted.runAggregated(PgpKeys.publishSigned in Global in extracted.get(thisProjectRef), state)
+      },
+      enableCrossBuild = true
+    ),
     setNextVersion,
     commitNextVersion,
     pushChanges
