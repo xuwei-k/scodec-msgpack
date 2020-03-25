@@ -18,6 +18,7 @@ val Scala212 = "2.12.11"
 
 lazy val commonSettings = Def.settings(
   scalaVersion := Scala212,
+  organization in ThisBuild := "com.github.xuwei-k",
   crossScalaVersions := Seq(Scala212, "2.13.1"),
   scalacOptions ++= Seq(
     "-deprecation",
@@ -76,7 +77,6 @@ lazy val buildSettings = commonSettings ++ Seq(
   ),
   buildInfoPackage := "scodec.msgpack",
   buildInfoObject := "BuildInfoScodecMsgpack",
-  organization := "com.github.xuwei-k",
   credentials ++= PartialFunction
     .condOpt(sys.env.get("SONATYPE_USER") -> sys.env.get("SONATYPE_PASS")) {
       case (Some(user), Some(pass)) =>
