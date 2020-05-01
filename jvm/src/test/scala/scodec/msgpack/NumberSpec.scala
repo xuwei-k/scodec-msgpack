@@ -24,8 +24,8 @@ class NumberSpec extends AnyFlatSpec with Checkers {
     val upper = (i >>> 32).toInt
     val lower = i.toInt
 
-    val u = BigInteger.valueOf(upper.toLong & 0XFFFFFFFFL).shiftLeft(32)
-    val l = BigInteger.valueOf(lower.toLong & 0XFFFFFFFFL)
+    val u = BigInteger.valueOf(upper.toLong & 0xffffffffL).shiftLeft(32)
+    val l = BigInteger.valueOf(lower.toLong & 0xffffffffL)
     u add l
   }
 
