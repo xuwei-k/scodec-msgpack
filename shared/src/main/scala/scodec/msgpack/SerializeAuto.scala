@@ -13,10 +13,11 @@ private final class SerializeTypeClassImpl() extends TypeClass[Serialize] {
     lazy val cl = CL
     lazy val cr = CR
     new Serialize[L :+: R] {
-      override def pack(v: L :+: R) = v match {
-        case Inl(l) => cl.pack(l)
-        case Inr(r) => cr.pack(r)
-      }
+      override def pack(v: L :+: R) =
+        v match {
+          case Inl(l) => cl.pack(l)
+          case Inr(r) => cr.pack(r)
+        }
       override def unpack(v: MessagePack) =
         cl.unpack(v).map(Inl(_)).orElse(cr.unpack(v).map(Inr(_)))
     }
@@ -30,10 +31,11 @@ private final class SerializeTypeClassImpl() extends TypeClass[Serialize] {
 
   override val emptyProduct = new Serialize[HNil] {
     override def pack(v: HNil) = Attempt.successful(MNil)
-    override def unpack(v: MessagePack) = v match {
-      case MNil => Attempt.successful(HNil)
-      case other => Attempt.failure(Err(s"expected MNil, but was $other."))
-    }
+    override def unpack(v: MessagePack) =
+      v match {
+        case MNil => Attempt.successful(HNil)
+        case other => Attempt.failure(Err(s"expected MNil, but was $other."))
+      }
   }
 
   override def product[H, T <: HList](H: Serialize[H], T: Serialize[T]) =
@@ -43,14 +45,15 @@ private final class SerializeTypeClassImpl() extends TypeClass[Serialize] {
           h <- H.pack(v.head)
           t <- T.pack(v.tail)
         } yield MFixArray(Vector(h, t))
-      override def unpack(v: MessagePack) = v match {
-        case MFixArray(Vector(v1, v2)) =>
-          for {
-            h <- H.unpack(v1)
-            t <- T.unpack(v2)
-          } yield h :: t
-        case other => Attempt.failure(Err(s"expected MfixArray(Vector(h, t)), but was $other."))
-      }
+      override def unpack(v: MessagePack) =
+        v match {
+          case MFixArray(Vector(v1, v2)) =>
+            for {
+              h <- H.unpack(v1)
+              t <- T.unpack(v2)
+            } yield h :: t
+          case other => Attempt.failure(Err(s"expected MfixArray(Vector(h, t)), but was $other."))
+        }
     }
 
   override def project[F, G](instance: => Serialize[G], to: F => G, from: G => F) =
