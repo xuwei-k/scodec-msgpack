@@ -1,8 +1,8 @@
 Scodec MessagePack
 ===================
 
-.. image:: https://travis-ci.org/xuwei-k/scodec-msgpack.svg?branch=master
-    :target: https://travis-ci.org/xuwei-k/scodec-msgpack
+.. image:: https://travis-ci.com/xuwei-k/scodec-msgpack.svg?branch=master
+    :target: https://travis-ci.com/xuwei-k/scodec-msgpack
 .. image:: https://maven-badges.herokuapp.com/maven-central/com.github.xuwei-k/scodec-msgpack_2.13/badge.svg
     :target: https://maven-badges.herokuapp.com/maven-central/com.github.xuwei-k/scodec-msgpack_2.13
 .. image:: https://javadoc-badge.appspot.com/com.github.xuwei-k/scodec-msgpack_2.13.svg?label=scaladoc
