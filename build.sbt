@@ -78,9 +78,8 @@ lazy val buildSettings = commonSettings ++ Seq(
   buildInfoPackage := "scodec.msgpack",
   buildInfoObject := "BuildInfoScodecMsgpack",
   credentials ++= PartialFunction
-    .condOpt(sys.env.get("SONATYPE_USER") -> sys.env.get("SONATYPE_PASS")) {
-      case (Some(user), Some(pass)) =>
-        Credentials("Sonatype Nexus Repository Manager", "oss.sonatype.org", user, pass)
+    .condOpt(sys.env.get("SONATYPE_USER") -> sys.env.get("SONATYPE_PASS")) { case (Some(user), Some(pass)) =>
+      Credentials("Sonatype Nexus Repository Manager", "oss.sonatype.org", user, pass)
     }
     .toList,
   homepage := Some(url("https://github.com/xuwei-k/scodec-msgpack")),
