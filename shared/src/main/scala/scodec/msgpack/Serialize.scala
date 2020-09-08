@@ -170,8 +170,8 @@ object Serialize {
       def pack(vec: Vector[A]): Attempt[MessagePack] = {
         val len = vec.size
         vec
-          .foldLeft(Attempt.successful(Vector.empty[MessagePack])) {
-            case (acc, v) => acc.flatMap(a => S.pack(v).map(a :+ _))
+          .foldLeft(Attempt.successful(Vector.empty[MessagePack])) { case (acc, v) =>
+            acc.flatMap(a => S.pack(v).map(a :+ _))
           }
           .map(vm =>
             if (len <= 15) MFixArray(vm)
@@ -196,8 +196,8 @@ object Serialize {
     new Serialize[Map[A, B]] {
       def pack(m: Map[A, B]): Attempt[MessagePack] = {
         val len = m.size
-        m.toVector.foldLeft(Attempt.successful(Vector.empty[(MessagePack, MessagePack)])) {
-          case (acc, (k, v)) => acc.flatMap(a => S.pack(k).flatMap(kk => T.pack(v).map(vv => a :+ ((kk, vv)))))
+        m.toVector.foldLeft(Attempt.successful(Vector.empty[(MessagePack, MessagePack)])) { case (acc, (k, v)) =>
+          acc.flatMap(a => S.pack(k).flatMap(kk => T.pack(v).map(vv => a :+ ((kk, vv)))))
         } map { vm =>
           val mm = vm.toMap
           if (len <= 15) MFixMap(mm)
@@ -208,8 +208,8 @@ object Serialize {
 
       private def sequence(m: Map[MessagePack, MessagePack]): Attempt[Map[A, B]] =
         m.toVector
-          .foldLeft(Attempt.successful(Vector.empty[(A, B)])) {
-            case (acc, (k, v)) => acc.flatMap(a => S.unpack(k).flatMap(kk => T.unpack(v).map(vv => a :+ ((kk, vv)))))
+          .foldLeft(Attempt.successful(Vector.empty[(A, B)])) { case (acc, (k, v)) =>
+            acc.flatMap(a => S.unpack(k).flatMap(kk => T.unpack(v).map(vv => a :+ ((kk, vv)))))
           }
           .map(_.toMap)
 

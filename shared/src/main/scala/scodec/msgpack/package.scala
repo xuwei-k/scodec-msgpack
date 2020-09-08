@@ -9,8 +9,8 @@ package object msgpack {
     new Codec[A] {
       def encode(a: A): Attempt[BitVector] = S.pack(a).flatMap(MessagePackCodec.encode)
       def decode(buffer: BitVector): Attempt[DecodeResult[A]] =
-        MessagePackCodec.decode(buffer).flatMap {
-          case DecodeResult(a, rest) => S.unpack(a).map(DecodeResult(_, rest))
+        MessagePackCodec.decode(buffer).flatMap { case DecodeResult(a, rest) =>
+          S.unpack(a).map(DecodeResult(_, rest))
         }
       def sizeBound = MessagePackCodec.sizeBound
     }
