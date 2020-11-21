@@ -39,11 +39,11 @@ class NumberSpec extends AnyFlatSpec with Checkers {
           out.writeLong(x)
         }
         if (Int.MinValue <= x && x <= Int.MaxValue) {
-          assert(Codec.summon[Int].decodeValue(bytes) == Attempt.Successful(x))
+          assert(Codec[Int].decodeValue(bytes) == Attempt.Successful(x))
         } else {
-          assert(Codec.summon[Int].decodeValue(bytes).isFailure)
+          assert(Codec[Int].decodeValue(bytes).isFailure)
         }
-        assert(Codec.summon[Long].decodeValue(bytes) == Attempt.Successful(x))
+        assert(Codec[Long].decodeValue(bytes) == Attempt.Successful(x))
         true
       },
       params: _*
@@ -75,11 +75,11 @@ class NumberSpec extends AnyFlatSpec with Checkers {
           out.writeInt(x.toInt)
         }
         if (Int.MinValue <= x && x <= Int.MaxValue) {
-          assert(Codec.summon[Int].decodeValue(bytes) == Attempt.Successful(x))
+          assert(Codec[Int].decodeValue(bytes) == Attempt.Successful(x))
         } else {
-          assert(Codec.summon[Int].decodeValue(bytes).isFailure)
+          assert(Codec[Int].decodeValue(bytes).isFailure)
         }
-        assert(Codec.summon[Long].decodeValue(bytes) == Attempt.Successful(x))
+        assert(Codec[Long].decodeValue(bytes) == Attempt.Successful(x))
         true
       },
       params: _*
@@ -111,14 +111,14 @@ class NumberSpec extends AnyFlatSpec with Checkers {
           out.writeLong(x.toLong)
         }
         if (Int.MinValue <= x && x <= Int.MaxValue) {
-          assert(Codec.summon[Int].decodeValue(bytes) == Attempt.Successful(x))
+          assert(Codec[Int].decodeValue(bytes) == Attempt.Successful(x))
         } else {
-          assert(Codec.summon[Int].decodeValue(bytes).isFailure)
+          assert(Codec[Int].decodeValue(bytes).isFailure)
         }
         if (Long.MinValue <= x && x <= Long.MaxValue) {
-          assert(Codec.summon[Long].decodeValue(bytes) == Attempt.Successful(x))
+          assert(Codec[Long].decodeValue(bytes) == Attempt.Successful(x))
         } else {
-          assert(Codec.summon[Long].decodeValue(bytes).map(toUnsignedBigInt) == Attempt.Successful(x))
+          assert(Codec[Long].decodeValue(bytes).map(toUnsignedBigInt) == Attempt.Successful(x))
         }
         true
       },
@@ -133,8 +133,8 @@ class NumberSpec extends AnyFlatSpec with Checkers {
           out.writeByte(Code.FLOAT32)
           out.writeFloat(x)
         }
-        assert(Codec.summon[Float].decodeValue(bytes) == Attempt.Successful(x))
-        assert(Codec.summon[Double].decodeValue(bytes) == Attempt.Successful(x))
+        assert(Codec[Float].decodeValue(bytes) == Attempt.Successful(x))
+        assert(Codec[Double].decodeValue(bytes) == Attempt.Successful(x))
         true
       },
       params: _*
