@@ -66,7 +66,7 @@ lazy val buildSettings = commonSettings ++ Seq(
     "org.scalatestplus" %%% "scalacheck-1-14" % "3.2.2.0" % "test",
     "org.scalacheck" %%% "scalacheck" % "1.15.1" % "test"
   ),
-  buildInfoKeys := BuildInfoKey.ofN(
+  buildInfoKeys := Seq[BuildInfoKey](
     organization,
     name,
     version,
