@@ -129,7 +129,7 @@ lazy val msgpack = crossProject(JSPlatform, JVMPlatform)
   )
   .jvmSettings(
     fork in Test := true,
-    libraryDependencies += "org.msgpack" % "msgpack-core" % "0.8.21" % "test"
+    libraryDependencies += "org.msgpack" % "msgpack-core" % "0.8.22" % "test"
   )
 
 lazy val msgpackJVM = msgpack.jvm
