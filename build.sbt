@@ -64,7 +64,7 @@ lazy val buildSettings = commonSettings ++ Seq(
     "org.scodec" %%% "scodec-core" % "1.11.7",
     "org.scalatest" %%% "scalatest" % "3.2.3" % "test",
     "org.scalatestplus" %%% "scalacheck-1-15" % "3.2.3.0" % "test",
-    "org.scalacheck" %%% "scalacheck" % "1.15.2" % "test"
+    "org.scalacheck" %%% "scalacheck" % "1.15.3" % "test"
   ),
   buildInfoKeys := Seq[BuildInfoKey](
     organization,
