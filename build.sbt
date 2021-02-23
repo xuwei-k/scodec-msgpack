@@ -14,12 +14,12 @@ val tagOrHash = Def.setting {
 
 val unusedWarnings = Seq("-Ywarn-unused:imports")
 
-val Scala212 = "2.12.12"
+val Scala212 = "2.12.13"
 
 lazy val commonSettings = Def.settings(
   scalaVersion := Scala212,
   organization in ThisBuild := "com.github.xuwei-k",
-  crossScalaVersions := Seq(Scala212, "2.13.4"),
+  crossScalaVersions := Seq(Scala212, "2.13.5"),
   scalacOptions ++= Seq(
     "-deprecation",
     "-unchecked",
