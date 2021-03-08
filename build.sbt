@@ -62,8 +62,8 @@ lazy val buildSettings = commonSettings ++ Seq(
   scalaJSStage in Global := FastOptStage,
   libraryDependencies ++= Seq(
     "org.scodec" %%% "scodec-core" % "1.11.7",
-    "org.scalatest" %%% "scalatest" % "3.2.5" % "test",
-    "org.scalatestplus" %%% "scalacheck-1-15" % "3.2.5.0" % "test",
+    "org.scalatest" %%% "scalatest" % "3.2.6" % "test",
+    "org.scalatestplus" %%% "scalacheck-1-15" % "3.2.6.0" % "test",
     "org.scalacheck" %%% "scalacheck" % "1.15.3" % "test"
   ),
   buildInfoKeys := Seq[BuildInfoKey](
