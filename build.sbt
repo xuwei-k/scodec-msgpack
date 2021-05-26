@@ -123,7 +123,13 @@ lazy val msgpack = crossProject(JSPlatform, JVMPlatform)
     scalacOptions += {
       val a = (LocalRootProject / baseDirectory).value.toURI.toString
       val g = "https://raw.githubusercontent.com/xuwei-k/scodec-msgpack/" + tagOrHash.value
-      s"-P:scalajs:mapSourceURI:$a->$g/"
+      val key = CrossVersion.partialVersion(scalaVersion.value) match {
+        case Some((3, _)) =>
+          "-scalajs-mapSourceURI"
+        case _ =>
+          "-P:scalajs:mapSourceURI"
+      }
+      s"${key}:$a->$g/"
     }
   )
   .jvmSettings(
