@@ -72,7 +72,6 @@ lazy val buildSettings = commonSettings ++ Seq(
     version,
     scalaVersion,
     sbtVersion,
-    scalacOptions,
     licenses
   ),
   buildInfoPackage := "scodec.msgpack",
