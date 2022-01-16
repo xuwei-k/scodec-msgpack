@@ -1,4 +1,4 @@
-import sbtcrossproject.{crossProject, CrossType}
+import sbtcrossproject.CrossType
 import sbtrelease.ReleaseStateTransformations._
 
 publish / skip := true
