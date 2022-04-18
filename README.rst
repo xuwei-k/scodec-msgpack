@@ -3,8 +3,8 @@ Scodec MessagePack
 
 .. image:: https://maven-badges.herokuapp.com/maven-central/com.github.xuwei-k/scodec-msgpack_2.13/badge.svg
     :target: https://maven-badges.herokuapp.com/maven-central/com.github.xuwei-k/scodec-msgpack_2.13
-.. image:: https://javadoc-badge.appspot.com/com.github.xuwei-k/scodec-msgpack_2.13.svg?label=scaladoc
-    :target: https://javadoc-badge.appspot.com/com.github.xuwei-k/scodec-msgpack_2.13
+.. image:: https://javadoc.io/badge2/com.github.xuwei-k/scodec-msgpack_2.13/javadoc.svg
+    :target: https://javadoc.io/doc/com.github.xuwei-k/scodec-msgpack_2.13/latest/scodec/msgpack/index.html
 
 scodec-msgpack is a yet another `MessagePack <http://msgpack.org/>`_ Scala implementation.
 
