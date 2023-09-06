@@ -19,7 +19,7 @@ val Scala212 = "2.12.18"
 lazy val commonSettings = Def.settings(
   scalaVersion := Scala212,
   ThisBuild / organization := "com.github.xuwei-k",
-  crossScalaVersions := Seq(Scala212, "2.13.11"),
+  crossScalaVersions := Seq(Scala212, "2.13.12"),
   scalacOptions ++= Seq(
     "-deprecation",
     "-unchecked",
