@@ -14,7 +14,7 @@ val tagOrHash = Def.setting {
 
 val unusedWarnings = Seq("-Ywarn-unused:imports")
 
-val Scala212 = "2.12.19"
+val Scala212 = "2.12.20"
 
 lazy val commonSettings = Def.settings(
   scalaVersion := Scala212,
