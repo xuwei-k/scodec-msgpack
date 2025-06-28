@@ -6,13 +6,13 @@ import scodec.bits.BitVector
 import scodec.bits._
 import scodec.codecs._
 
-object MessagePackCodec extends Codec[MessagePack] {
+object MessagePackCodec extends Codec[MessagePack] with ScodecPlatform {
   implicit val positiveFixInt: Codec[MPositiveFixInt] =
     (constant(bin"0") :: uint(7)).dropUnits.as[MPositiveFixInt]
 
   private def mmap(size: Codec[Int]): Codec[Map[MessagePack, MessagePack]] =
     lazily {
-      vectorOfN(size, MessagePackCodec ~ MessagePackCodec).xmap(vec => vec.toMap, m => m.toVector)
+      vectorOfN(size, pairCodecs(MessagePackCodec, MessagePackCodec)).xmap(vec => vec.toMap, m => m.toVector)
     }
 
   implicit val fixMap: Codec[MFixMap] =
@@ -105,7 +105,7 @@ object MessagePackCodec extends Codec[MessagePack] {
 
   private def longMap(size: Codec[Long]): Codec[Map[MessagePack, MessagePack]] =
     lazily {
-      vectorOfN(size.xmap(_.toInt, _.toLong), MessagePackCodec ~ MessagePackCodec).xmap(_.toMap, _.toVector)
+      vectorOfN(size.xmap(_.toInt, _.toLong), pairCodecs(MessagePackCodec, MessagePackCodec)).xmap(_.toMap, _.toVector)
     }
 
   implicit val map32: Codec[MMap32] =
@@ -115,7 +115,44 @@ object MessagePackCodec extends Codec[MessagePack] {
     (constant(bin"111") :: uint(5).xmap(_ - 0x20, (a: Int) => a + 0x20)).dropUnits.as[MNegativeFixInt]
 
   private val codec: Codec[MessagePack] =
-    scodec.codecs.lazily { Codec.coproduct[MessagePack].choice }
+    choice(
+      positiveFixInt.upcast,
+      fixMap.upcast,
+      fixArray.upcast,
+      fixStr.upcast,
+      nil.upcast,
+      mFalse.upcast,
+      mTrue.upcast,
+      bin8.upcast,
+      bin16.upcast,
+      bin32.upcast,
+      ext8.upcast,
+      ext16.upcast,
+      ext32.upcast,
+      float32.upcast,
+      float64.upcast,
+      muint8.upcast,
+      muint16.upcast,
+      muint32.upcast,
+      muint64.upcast,
+      mint8.upcast,
+      mint16.upcast,
+      mint32.upcast,
+      mint64.upcast,
+      fixExt1.upcast,
+      fixExt2.upcast,
+      fixExt4.upcast,
+      fixExt8.upcast,
+      fixExt16.upcast,
+      str8.upcast,
+      str16.upcast,
+      str32.upcast,
+      array16.upcast,
+      array32.upcast,
+      map16.upcast,
+      map32.upcast,
+      negativeFixInt.upcast
+    )
 
   def encode(m: MessagePack) = codec.encode(m)
   def decode(m: BitVector) = codec.decode(m)

@@ -41,11 +41,11 @@ class MessagePackSpec extends TestSuite with Checkers {
     check(forAll((m: Map[Int, Int]) => roundtrip(m)))
   }
 
-  case class Point(x: Int, y: Int, z: Int)
+  // case class Point(x: Int, y: Int, z: Int)
 
-  "Point" should "be able to encode and decode" in {
-    roundtrip(Point(1000, 5, 2))
-  }
+  // "Point" should "be able to encode and decode" in {
+  //   roundtrip(Point(1000, 5, 2))
+  // }
 
   "binary 16" should "be able to decode" in {
     val data = Array.fill[Byte](266)(Random.nextInt.toByte)

@@ -33,7 +33,7 @@ class NumberSpec extends AnyFlatSpec with Checkers {
 
   "INT64" should "be able to decode" in {
     check(
-      { x: Long =>
+      { (x: Long) =>
         val bytes = withDataOutputStream { out =>
           out.writeByte(Code.INT64)
           out.writeLong(x)
@@ -90,8 +90,8 @@ class NumberSpec extends AnyFlatSpec with Checkers {
     val gen = Gen.frequency(
       100 -> {
         for {
-          x <- Gen.choose(0, Long.MaxValue)
-          y <- Gen.choose(0, Long.MaxValue)
+          x <- Gen.choose(0L, Long.MaxValue)
+          y <- Gen.choose(0L, Long.MaxValue)
         } yield BigInt(x) + y
       },
       1 -> Gen.const(BigInt(0)),
@@ -128,7 +128,7 @@ class NumberSpec extends AnyFlatSpec with Checkers {
 
   "FLOAT32" should "be able to decode" in {
     check(
-      { x: Float =>
+      { (x: Float) =>
         val bytes = withDataOutputStream { out =>
           out.writeByte(Code.FLOAT32)
           out.writeFloat(x)
