@@ -15,11 +15,13 @@ val tagOrHash = Def.setting {
 val unusedWarnings = Seq("-Ywarn-unused:imports")
 
 val Scala212 = "2.12.20"
+val Scala213 = "2.13.16"
+val Scala3 = "3.3.5"
 
 lazy val commonSettings = Def.settings(
   scalaVersion := Scala212,
   ThisBuild / organization := "com.github.xuwei-k",
-  crossScalaVersions := Seq(Scala212, "2.13.16"),
+  crossScalaVersions := Seq(Scala212, Scala213, Scala3),
   scalacOptions ++= Seq(
     "-deprecation",
     "-unchecked",
@@ -60,8 +62,13 @@ commonSettings
 lazy val buildSettings = commonSettings ++ Seq(
   name := "scodec-msgpack",
   Global / scalaJSStage := FastOptStage,
+  libraryDependencies += {
+    if (scalaVersion.value.startsWith("3."))
+      "org.scodec" %%% "scodec-core" % "2.3.2"
+    else
+      "org.scodec" %%% "scodec-core" % "1.11.11"
+  },
   libraryDependencies ++= Seq(
-    "org.scodec" %%% "scodec-core" % "1.11.11",
     "org.scalatest" %%% "scalatest" % "3.2.19" % "test",
     "org.scalatestplus" %%% "scalacheck-1-18" % "3.2.19.0" % "test",
     "org.scalacheck" %%% "scalacheck" % "1.18.1" % "test"
@@ -110,7 +117,7 @@ lazy val buildSettings = commonSettings ++ Seq(
   }
 ) ++ Seq(Compile, Test).flatMap(c => c / console / scalacOptions --= unusedWarnings)
 
-lazy val msgpack = crossProject(JSPlatform, JVMPlatform)
+lazy val msgpack = crossProject(JSPlatform, JVMPlatform, NativePlatform)
   .crossType(CrossType.Full)
   .in(file("."))
   .settings(
@@ -139,3 +146,4 @@ lazy val msgpack = crossProject(JSPlatform, JVMPlatform)
 
 lazy val msgpackJVM = msgpack.jvm
 lazy val msgpackJS = msgpack.js
+lazy val msgpackNative = msgpack.native

@@ -1,5 +1,4 @@
-package scodec
-package msgpack
+package scodec.msgpack
 package examples
 
 import Serialize._
