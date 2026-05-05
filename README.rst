@@ -1,8 +1,8 @@
 Scodec MessagePack
 ===================
 
-.. image:: https://maven-badges.herokuapp.com/maven-central/com.github.xuwei-k/scodec-msgpack_2.13/badge.svg
-    :target: https://maven-badges.herokuapp.com/maven-central/com.github.xuwei-k/scodec-msgpack_2.13
+.. image:: https://img.shields.io/maven-central/v/com.github.xuwei-k/scodec-msgpack_2.13
+    :target: https://central.sonatype.com/artifact/com.github.xuwei-k/scodec-msgpack_2.13
 .. image:: https://javadoc.io/badge2/com.github.xuwei-k/scodec-msgpack_2.13/javadoc.svg
     :target: https://javadoc.io/doc/com.github.xuwei-k/scodec-msgpack_2.13/latest/scodec/msgpack/index.html
 
