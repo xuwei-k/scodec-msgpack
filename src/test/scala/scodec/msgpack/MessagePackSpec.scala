@@ -48,7 +48,7 @@ class MessagePackSpec extends TestSuite with Checkers {
   }
 
   "binary 16" should "be able to decode" in {
-    val data = Array.fill[Byte](266)(Random.nextInt.toByte)
+    val data = Array.fill[Byte](266)(Random.nextInt().toByte)
     val binary = Array(0xc5, 0x01, 0x0a).map(_.toByte) ++ data
     val result = codecs.MessagePackCodec.decode(scodec.bits.BitVector(binary))
     assert(result.map(_.value) == Attempt.successful(MBinary16(scodec.bits.ByteVector(data))))
