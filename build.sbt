@@ -1,9 +1,8 @@
-import sbtcrossproject.CrossType
 import sbtrelease.ReleaseStateTransformations._
 
-publish / skip := true
+val scalaVersions = Seq("2.12.21", "2.13.18")
 
-def gitHash: String = sys.process.Process("git rev-parse HEAD").lineStream.head
+def gitHash: String = sys.process.Process("git rev-parse HEAD").lazyLines_!.head
 
 val tagName = Def.setting {
   s"v${if (releaseUseGlobalVersion.value) (ThisBuild / version).value else version.value}"
@@ -14,12 +13,8 @@ val tagOrHash = Def.setting {
 
 val unusedWarnings = Seq("-Ywarn-unused:imports")
 
-val Scala212 = "2.12.21"
-
 lazy val commonSettings = Def.settings(
-  scalaVersion := Scala212,
   ThisBuild / organization := "com.github.xuwei-k",
-  crossScalaVersions := Seq(Scala212, "2.13.18"),
   scalacOptions ++= Seq(
     "-deprecation",
     "-unchecked",
@@ -43,7 +38,7 @@ lazy val commonSettings = Def.settings(
     tagRelease,
     ReleaseStep(
       action = { state =>
-        val extracted = Project extract state
+        val extracted = Project.extract(state)
         extracted.runAggregated(extracted.get(thisProjectRef) / (Global / PgpKeys.publishSigned), state)
       },
       enableCrossBuild = true
@@ -55,16 +50,19 @@ lazy val commonSettings = Def.settings(
   )
 )
 
-commonSettings
+lazy val msgpackRoot = rootProject.autoAggregate.settings(
+  commonSettings,
+  publish / skip := true
+)
 
 lazy val buildSettings = commonSettings ++ Seq(
   name := "scodec-msgpack",
   Global / scalaJSStage := FastOptStage,
   libraryDependencies ++= Seq(
-    "org.scodec" %%% "scodec-core" % "1.11.11",
-    "org.scalatest" %%% "scalatest" % "3.2.20" % "test",
-    "org.scalatestplus" %%% "scalacheck-1-19" % "3.2.20.0" % "test",
-    "org.scalacheck" %%% "scalacheck" % "1.19.0" % "test"
+    "org.scodec" %% "scodec-core" % "1.11.11",
+    "org.scalatest" %% "scalatest" % "3.2.20" % "test",
+    "org.scalatestplus" %% "scalacheck-1-19" % "3.2.20.0" % "test",
+    "org.scalacheck" %% "scalacheck" % "1.19.0" % "test"
   ),
   buildInfoKeys := Seq[BuildInfoKey](
     organization,
@@ -105,8 +103,7 @@ lazy val buildSettings = commonSettings ++ Seq(
   }
 ) ++ Seq(Compile, Test).flatMap(c => c / console / scalacOptions --= unusedWarnings)
 
-lazy val msgpack = crossProject(JSPlatform, JVMPlatform)
-  .crossType(CrossType.Full)
+lazy val msgpack = projectMatrix
   .in(file("."))
   .settings(
     buildSettings
@@ -114,23 +111,26 @@ lazy val msgpack = crossProject(JSPlatform, JVMPlatform)
   .enablePlugins(
     BuildInfoPlugin
   )
-  .jsSettings(
-    scalacOptions += {
-      val a = (LocalRootProject / baseDirectory).value.toURI.toString
-      val g = "https://raw.githubusercontent.com/xuwei-k/scodec-msgpack/" + tagOrHash.value
-      val key = CrossVersion.partialVersion(scalaVersion.value) match {
-        case Some((3, _)) =>
-          "-scalajs-mapSourceURI"
-        case _ =>
-          "-P:scalajs:mapSourceURI"
+  .jsPlatform(
+    scalaVersions,
+    Def.settings(
+      scalacOptions += {
+        val a = (LocalRootProject / baseDirectory).value.toURI.toString
+        val g = "https://raw.githubusercontent.com/xuwei-k/scodec-msgpack/" + tagOrHash.value
+        val key = CrossVersion.partialVersion(scalaVersion.value) match {
+          case Some((3, _)) =>
+            "-scalajs-mapSourceURI"
+          case _ =>
+            "-P:scalajs:mapSourceURI"
+        }
+        s"${key}:$a->$g/"
       }
-      s"${key}:$a->$g/"
-    }
+    )
   )
-  .jvmSettings(
-    Test / fork := true,
-    libraryDependencies += "org.msgpack" % "msgpack-core" % "0.9.12" % "test"
+  .jvmPlatform(
+    scalaVersions,
+    Def.settings(
+      Test / fork := true,
+      libraryDependencies += "org.msgpack" % "msgpack-core" % "0.9.12" % "test"
+    )
   )
-
-lazy val msgpackJVM = msgpack.jvm
-lazy val msgpackJS = msgpack.js
