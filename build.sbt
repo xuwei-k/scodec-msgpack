@@ -109,7 +109,7 @@ lazy val msgpack = crossProject(JSPlatform, JVMPlatform)
   .crossType(CrossType.Full)
   .in(file("."))
   .settings(
-    buildSettings: _*
+    buildSettings
   )
   .enablePlugins(
     BuildInfoPlugin
