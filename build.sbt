@@ -52,6 +52,8 @@ lazy val commonSettings = Def.settings(
 
 lazy val msgpackRoot = rootProject.autoAggregate.settings(
   commonSettings,
+  Compile / scalaSource := baseDirectory.value / "dummy",
+  Test / scalaSource := baseDirectory.value / "dummy",
   publish / skip := true
 )
 
