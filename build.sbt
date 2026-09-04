@@ -1,6 +1,6 @@
 import sbtrelease.ReleaseStateTransformations._
 
-val scalaVersions = Seq("2.12.21", "2.13.18")
+val scalaVersions = Seq("2.12.21", "3.9.0")
 
 def gitHash: String = sys.process.Process("git rev-parse HEAD").lazyLines_!.head
 
